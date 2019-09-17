@@ -14,3 +14,8 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::resource('/user','UserController')->middleware('session');
+Route::get('/login','UserController@login');
+Route::get('/logout','UserController@logout');
+Route::post('/setSession','UserController@setSession');
