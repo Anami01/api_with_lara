@@ -15,15 +15,15 @@
 <body>
   <table>
     @php 
-    $url = '/user';
+    $url = url("/").'/user';
     $button = 'Submit';
     if(isset($edit_data))
     {
-      $url = '/user/'.$edit_data->id;
+      $url = url("/").'/user/'.$edit_data->id;
       $button = 'Edit';
     }
     @endphp
-    <form action="{{ $url }}" method="post" enctype="multipart/form-data">@csrf @isset($edit_data) @method("PATCH") @endisset
+    <form action="{{ $url }}" method="post" enctype="multipart/form-data" autocomplete="off">@csrf @isset($edit_data) @method("PATCH") @endisset
       <tr>
         <td>Name</td>
         <td>
