@@ -161,4 +161,41 @@ class UserController extends Controller { /** * Display a listing of the
         $request->session()->forget('email');
         return redirect('/user');
     }
+
+    /**
+    For generating random data
+    **/
+    public function testDatabase()
+    {
+        $users = factory(User::class, 1)->create();
+    }
+
+    /**
+    User registration
+    **/
+    public function register()
+    {
+        return view('user/register');
+    }
+
+    public function add_user(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'password' => 'required',
+            'confirm_password' => 'required|same:password',
+        ]);
+        $array = array(
+            'email' => $request->email,
+            'name' => $request->name,
+            'password' => $request->password,
+        );
+        $data = DB::table('users')->insert($array);
+        if($data == true){
+            return redirect('/user');
+        }else{
+            return redirect('/register');
+        }
+    }
 }

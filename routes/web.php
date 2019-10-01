@@ -19,3 +19,6 @@ Route::resource('/user','UserController')->middleware('session');
 Route::get('/login','UserController@login');
 Route::get('/logout','UserController@logout');
 Route::post('/setSession','UserController@setSession');
+Route::get('/test','UserController@testDatabase');
+Route::get('/register','UserController@register');
+Route::post('/add_user','UserController@add_user');

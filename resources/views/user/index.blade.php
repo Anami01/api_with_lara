@@ -4,12 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <title>Index</title>
 </head>
 <body>
-  <a href="user/create"><button>Add User</button></a>
-  <a href="logout"><button>Logout</button></a>
-  <table border='1'>
+  <a href="logout" class="btn btn-danger float-right">Logout</a>
+  <table border='1' style="text-align: center" class="table">
+    <thead>
     <tr>
       <td>Sr.no</td>
       <td>Name</td>
@@ -19,24 +20,31 @@
       <td>Email</td>
       <td>Photo</td>
       <td>Gender</td>
-      <td>Password</td>
       <td>Action</td>
     </tr>
-    @php $i = 1 @endphp
+    </thead>
+    <tbody>
+    @php $i = 1; if(sizeof($data) != 0){ @endphp
     @foreach($data as $val)
-      <tr>
+    <tr>
       <td>{{ $i++ }}</td>
-      <td>{{ $val->name }}</td>
-      <td>{{ $val->address }}</td>
-      <td>{{ $val->city }}</td>
-      <td>{{ $val->number }}</td>
-      <td>{{ $val->email }}</td>
-      <td><img src='uploads/{{ $val->photo }}' height="50" width="50"></td>
-      <td>{{ $val->gender }}</td>
-      <td>{{ $val->password }}</td>
-      <td><a href='user/{{ $val->id }}/edit'><button>Edit</button></a><form action="/user/{{ $val->id }}" method='post'>@csrf @method('DELETE') <button type="submit" class='btn btn-danger'>Delete</button></form></td>
-      </tr>
+      <td>{{ (!empty($val->name) ? $val->name : '-') }}</td>
+      <td>{{ (!empty($val->address) ? $val->address : '-') }}</td>
+      <td>{{ (!empty($val->city) ? $val->city : '-') }}</td>
+      <td>{{ (!empty($val->number) ? $val->number : '-') }}</td>
+      <td>{{ (!empty($val->email) ? $val->email : '-') }}</td>
+      <td><img src='{{ (!empty($val->photo) ? "uploads/".$val->photo : "") }}' alt="no_image" height="50" width="50"></td>
+      <td>{{ (!empty($val->gender) ? $val->gender : '-') }}</td>
+      <td><a href='user/{{ $val->id }}/edit' class="btn btn-primary m-10">Edit</a><form action="/user/{{ $val->id }}" method='post'>@csrf @method('DELETE') <button type="submit" class='btn btn-primary'>Delete</button></form></td>
+    </tr>
     @endforeach
-  </table>
+    @php }else{ @endphp
+    <tr>
+      <td colspan="10" style="text-align: center;">No Data</td>
+    </tr>
+    @php } @endphp
+    </tbody>
+  </table><br>
+  <a href="user/create" class="btn btn-primary">Add User</a>
 </body>
 </html>
