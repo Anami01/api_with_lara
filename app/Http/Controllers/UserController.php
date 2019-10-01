@@ -145,7 +145,7 @@ class UserController extends Controller { /** * Display a listing of the
     public function setSession(Request $request)
     {
         $data = DB::table('users')->where('email',$request->username)->where('password',$request->password)->get()->first();
-        if(count($data) > 0){
+        if($data){
             $request->session()->put('email',$request->username);
             return redirect('/user');
         }else{
