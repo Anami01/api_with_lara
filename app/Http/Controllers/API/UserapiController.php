@@ -18,10 +18,19 @@ class UserapiController extends Controller
     public function index()
     {
         $data = User::all();
-        $response = array(
-            'success' => true,
-            'data' => $data
-        );
+        if($data->isnotEmpty()){
+            $response = array(
+                'success' => true,
+                'data' => $data,
+                'msg' => 'Data found.'
+            );
+        }else{
+            $response = array(
+                'success' => false,
+                'data' => '',
+                'msg' => 'No data found.'
+            );
+        }
         return response()->json($response); 
     }
 
@@ -54,18 +63,18 @@ class UserapiController extends Controller
             if($data == true){
                 $response = array(
                     'success' => true,
-                    'data' => 'Successfully registered'
+                    'msg' => 'Successfully registered'
                 );
             }else{
                 $response = array(
                     'success' => false,
-                    'data' => 'Something went wrong'
+                    'msg' => 'Something went wrong'
                 );
             }
         }else{
             $response = array(
                 'success' => false,
-                'data' => 'Something went wrong'
+                'msg' => 'No data entered.'
             );
         }
         return response()->json($response); 
@@ -79,7 +88,23 @@ class UserapiController extends Controller
      */
     public function show($id)
     {
-        //
+        $userData = '';
+        $data = User::find($id);
+        if($data != null){
+            $userData = User::where('id',$id)->firstorFail();
+            $response = array(
+                'success' => true,
+                'data' => $userData,
+                'msg' => 'Data found.'
+            );
+        }else{
+            $response = array(
+                'success' => false,
+                'data' => '',
+                'msg' => 'No data found.'
+            );
+        }
+        return response()->json($response); 
     }
 
     /**
@@ -100,9 +125,34 @@ class UserapiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($id)
     {
-        //
+        $rawPostData = json_decode(file_get_contents("php://input"));
+        if($rawPostData->name){
+            $array = array(
+                'name' => $rawPostData->name,
+                'email' => $rawPostData->email,
+                'password' => $rawPostData->password,
+            );
+            $data = DB::table('users')->where('id',$id)->update($array);
+            if($data == '1'){
+                $response = array(
+                    'success' => true,
+                    'msg' => 'Successfully updated'
+                );
+            }else{
+                $response = array(
+                    'success' => false,
+                    'msg' => 'Something went wrong'
+                );
+            }
+        }else{
+            $response = array(
+                'success' => false,
+                'msg' => 'No data entered.'
+            );
+        }
+        return response()->json($response); 
     }
 
     /**
@@ -113,6 +163,26 @@ class UserapiController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if(!empty($id)){
+            $data = User::find($id);
+            if($data != null){
+                $delete = User::destroy($id);
+                $response = array(
+                    'success' => true,
+                    'msg' => 'Successfully deleted.'
+                );
+            }else{
+                $response = array(
+                    'success' => false,
+                    'msg' => 'User does not exists.'
+                ); 
+            }
+        }else{
+            $response = array(
+                'success' => false,
+                'msg' => 'No data.'
+            );
+        }
+        return response()->json($response); 
     }
 }
