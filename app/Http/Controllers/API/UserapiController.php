@@ -27,7 +27,6 @@ class UserapiController extends Controller
         }else{
             $response = array(
                 'success' => false,
-                'data' => '',
                 'msg' => 'No data found.'
             );
         }
@@ -90,18 +89,17 @@ class UserapiController extends Controller
     {
         $userData = '';
         $data = User::find($id);
-        if($data != null){
+        if(is_null($data)){
+            $response = array(
+                'success' => false,
+                'msg' => 'No data found.'
+            );
+        }else{
             $userData = User::where('id',$id)->firstorFail();
             $response = array(
                 'success' => true,
                 'data' => $userData,
                 'msg' => 'Data found.'
-            );
-        }else{
-            $response = array(
-                'success' => false,
-                'data' => '',
-                'msg' => 'No data found.'
             );
         }
         return response()->json($response); 
@@ -165,17 +163,17 @@ class UserapiController extends Controller
     {
         if(!empty($id)){
             $data = User::find($id);
-            if($data != null){
+            if(is_null($data)){
+                $response = array(
+                    'success' => false,
+                    'msg' => 'User does not exists.'
+                ); 
+            }else{
                 $delete = User::destroy($id);
                 $response = array(
                     'success' => true,
                     'msg' => 'Successfully deleted.'
                 );
-            }else{
-                $response = array(
-                    'success' => false,
-                    'msg' => 'User does not exists.'
-                ); 
             }
         }else{
             $response = array(
