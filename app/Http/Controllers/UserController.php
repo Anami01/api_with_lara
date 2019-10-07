@@ -37,7 +37,6 @@ class UserController extends Controller { /** * Display a listing of the
             'photo' => 'required',
             'password' => 'required',
         ]);
-        // $photo = $request->file('photo')->store('uploads');
         $file = $request->file('photo');
         $destinationPath = 'uploads';
         $file->move($destinationPath,$file->getClientOriginalName());
@@ -147,6 +146,7 @@ class UserController extends Controller { /** * Display a listing of the
         $data = DB::table('users')->where('email',$request->username)->where('password',$request->password)->get()->first();
         if($data){
             $request->session()->put('email',$request->username);
+            $request->session()->put('name',$data->name);
             return redirect('/user');
         }else{
             $request->session()->flash('wrong_pass',"Please Enter Correct Username or Password");
