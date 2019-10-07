@@ -16,7 +16,7 @@ class CheckSession
     public function handle($request, Closure $next)
     {
         if ($request->Session()->get('email') == '') {
-            return redirect('/login');
+            return redirect('login');
         }
         return $next($request);
     }

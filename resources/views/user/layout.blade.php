@@ -8,9 +8,11 @@
 	<title>Index</title>
 </head>
 <body>
-	Current User : {{ Session::get('name') }}
-	<a href="logout" class="btn btn-danger float-right">Logout</a>
-	@yield('index')
-	<a href="user/create" class="btn btn-primary">Add User</a>
+	<div class="container">
+		<a href="change_password" class="btn btn-info m-xl-3">Change Password</a>
+		<a href="logout" class="btn btn-danger float-right m-xl-3">Logout</a>
+		@yield('index')
+		<a href="user/create" class="btn btn-link">Add User</a>
+	</div>
 </body>
 </html>

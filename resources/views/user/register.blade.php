@@ -1,3 +1,6 @@
+@if(Session::get('email'))
+  @php redirect('user') @endif
+@endif
 <!DOCTYPE html>
 <html lang="en">
 <head>

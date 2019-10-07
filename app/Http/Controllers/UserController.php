@@ -5,9 +5,21 @@ use DB;
 use App\User;
 use Illuminate\Http\Request;
 
-class UserController extends Controller { /** * Display a listing of the
-    resource. * * @return \Illuminate\Http\Response */ public function index() {
-        $data['data'] = User::all(); return view('user/index',$data); }
+class UserController extends Controller { 
+
+    public function __construct()
+    {
+        $this->middleware('session')->except(['login','logout','setSession','test','register']);
+    }
+    /**
+    Display a listing of the resource.
+    @return \Illuminate\Http\Response 
+    **/
+    
+    public function index() {
+        $data['data'] = User::all();
+        return view('user/index',$data);
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -196,6 +208,39 @@ class UserController extends Controller { /** * Display a listing of the
             return redirect('/user');
         }else{
             return redirect('/register');
+        }
+    }
+
+    /** 
+    Change Password Form
+    **/
+    public function change_password()
+    {
+        return view('user.change_password');
+    }
+
+    /** 
+    Change Password Form
+    **/
+    public function change_pass(Request $request)
+    {
+        $request->validate([
+            'old_pass' => 'required',
+            'new_pass' => 'required',
+            'confirm_pass' => 'required|same:new_pass',
+        ]);
+        $check = DB::table('users')->where('email',$request->session()->get('email'))->where('password',$request->old_pass)->get();
+        if(is_null($check)){
+            $request->session()->flash('pass_change',"Please Enter Correct Password");
+            return redirect('change_password');
+        }else{
+            $data = DB::table('users')->where('email',$request->session()->get('email'))->update(array('password'=>$request->new_pass));
+            if($data == '1'){
+                return redirect('user');
+            }else{
+              $request->session()->flash('pass_change',"Please Enter Different Password");
+            return redirect('change_password');  
+            }
         }
     }
 }
