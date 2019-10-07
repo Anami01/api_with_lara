@@ -1,4 +1,5 @@
  @extends('user.layout')
+ @section('title','Add User')
  @section('index') 
  <style type="text/css">
   span{
