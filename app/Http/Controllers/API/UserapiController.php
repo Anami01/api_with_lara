@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\API;
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
@@ -57,6 +57,7 @@ class UserapiController extends Controller
                 'name' => $rawPostData->name,
                 'email' => $rawPostData->email,
                 'password' => $rawPostData->password,
+                'api_token' => str_random(60)
             );
             $data = DB::table('users')->insert($array);
             if($data == true){
@@ -87,7 +88,6 @@ class UserapiController extends Controller
      */
     public function show($id)
     {
-        $userData = '';
         $data = User::find($id);
         if(is_null($data)){
             $response = array(
@@ -182,5 +182,46 @@ class UserapiController extends Controller
             );
         }
         return response()->json($response); 
+    }
+
+    public function login()
+    {
+        $rawPostData = json_decode(file_get_contents("php://input"));
+        if($rawPostData->email && $rawPostData->password){
+            $credentials = [
+                'email' => $rawPostData->email,
+                'password' => $rawPostData->password,
+            ];
+            if (auth()->attempt($credentials)) {
+                $token = auth()->user()->createToken('login')->accessToken;
+                return response()->json(['token' => $token], 200);
+            } else {
+                return response()->json(['error' => 'Unauthorised'], 401);
+            }
+        }else{
+            return response()->json(['error' => 'Error'], 500);
+        }
+        
+    } 
+
+    public function register()
+    {
+        $rawPostData = json_decode(file_get_contents("php://input"));
+        $user = User::create([
+            'name' => $rawPostData->name,
+            'email' => $rawPostData->email,
+            'password' => bcrypt($rawPostData->password),
+        ]);
+        $token = $user->createToken('TutsForWeb')->accessToken;
+        return response()->json(['token' => $token], 200);
+    }
+
+    public function test()
+    {
+        $response = array(
+            'success' => true,
+            'msg' => 'No data.'
+        );
+        return response()->json($response);
     }
 }
