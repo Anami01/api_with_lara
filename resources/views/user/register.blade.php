@@ -11,7 +11,7 @@
   <title>Login</title>
 </head>
 <body>
-  <form action="add_user" method="post">@csrf
+  <form action="/add_user" method="post">@csrf
     <table>
       <tr><td>Name</td></tr>
       <tr>

@@ -18,7 +18,7 @@ class UserController extends Controller {
     
     public function index() {
         $data['data'] = User::all();
-        return view('user/index',$data);
+        return view('user.index',$data);
     }
 
     /**
@@ -28,7 +28,7 @@ class UserController extends Controller {
      */
     public function create()
     {
-        return view('user/form');
+        return view('user.form');
     }
 
     /**
@@ -63,7 +63,7 @@ class UserController extends Controller {
             'password' => $request->password,
         );
         $data = DB::table('users')->insert($array);
-        return redirect('/user');
+        return redirect('user');
     }
 
     /**
@@ -86,7 +86,7 @@ class UserController extends Controller {
     public function edit($id)
     {
         $data = DB::table('users')->where('id',$id)->first();
-        return view('user/form',['edit_data' => $data]);
+        return view('user.form',['edit_data' => $data]);
     }
 
     /**
@@ -122,7 +122,7 @@ class UserController extends Controller {
             'password' => $request->password,
         );
         $data = DB::table('users')->where('id',$id)->update($array);
-        return redirect('/user');
+        return redirect('user');
     }
 
     /**
@@ -134,7 +134,7 @@ class UserController extends Controller {
     public function destroy($id)
     {
         DB::table('users')->where('id',$id)->delete();
-        return redirect('/user');
+        return redirect('user');
     }
 
      /**
@@ -145,9 +145,9 @@ class UserController extends Controller {
      public function login(Request $request)
      {
         if($request->session()->get('email') != ''){
-            return redirect('/user');
+            return redirect('user');
         }else{
-            return view('user/login');
+            return view('user.login');
         }
     }
     /**
@@ -159,7 +159,7 @@ class UserController extends Controller {
         if($data){
             $request->session()->put('email',$request->username);
             $request->session()->put('name',$data->name);
-            return redirect('/user');
+            return redirect('user');
         }else{
             $request->session()->flash('wrong_pass',"Please Enter Correct Username or Password");
             return redirect('login');
@@ -171,7 +171,7 @@ class UserController extends Controller {
     public function logout(Request $request)
     {
         $request->session()->forget('email');
-        return redirect('/user');
+        return redirect('login');
     }
 
     /**
@@ -187,7 +187,7 @@ class UserController extends Controller {
     **/
     public function register()
     {
-        return view('user/register');
+        return view('user.register');
     }
 
     public function add_user(Request $request)
@@ -205,9 +205,9 @@ class UserController extends Controller {
         );
         $data = DB::table('users')->insert($array);
         if($data == true){
-            return redirect('/user');
+            return redirect('user');
         }else{
-            return redirect('/register');
+            return redirect('register');
         }
     }
 

@@ -1,5 +1,5 @@
 @if(Session::get('email'))
-  @php redirect('user') @endif
+  @php redirect('user') @endphp
 @endif
 <!DOCTYPE html>
 <html lang="en">
@@ -11,7 +11,7 @@
   <title>Login</title>
 </head>
 <body>
-  <form action="setSession" method="post">@csrf
+  <form action="/setSession" method="post">@csrf
     <table>
       <tr>
         <td>Username</td>

@@ -1,18 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <title>Form</title>
-  <style type="text/css">
-    span{
-      color:red;
-    }
-  </style>
-</head>
-<body>
+ @extends('user.layout')
+ @section('index') 
+ <style type="text/css">
+  span{
+    color:red;
+  }
+</style>
+<div class="container">
   <table>
     @php 
     $url = url("/").'/user';
@@ -102,8 +95,8 @@
       <tr>
         <td>Gender</td>
         <td>
-          <input type="radio" name="gender" value='male' {{ isset($edit_data->gender) ? ($edit_data->gender == 'male' ? "checked" : '') : '' }}  >Male
-          <input type="radio" name="gender" value='female' {{ isset($edit_data->gender) ? ($edit_data->gender == 'female' ? "checked" : '') : '' }}  >Female
+          <input type="radio" name="gender" value='male' {{ isset($edit_data->gender) ? ($edit_data->gender == 'male' ? "checked" : '') : '' }}  > Male
+          <input type="radio" name="gender" value='female' {{ isset($edit_data->gender) ? ($edit_data->gender == 'female' ? "checked" : '') : '' }}  > Female
         </td>
         <td>
           @if($errors->has('gender')) 
@@ -124,10 +117,11 @@
       </tr>
       <tr>
         <td colspan='2'>
-          <input type="submit" value="{{ $button }}" class="btn btn-primary">
+          <input type="submit" value="{{ $button }}" class="btn btn-success mt-2">
+          <a href='/user' class="btn btn-info mt-2">Go Back</a>
         </td>
       </tr>
     </form>
   </table>
-</body>
-</html>
+</div>
+@endsection
