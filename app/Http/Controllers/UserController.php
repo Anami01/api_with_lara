@@ -137,6 +137,14 @@ class UserController extends Controller {
         return redirect('user');
     }
 
+    /**
+    User registration
+    **/
+    public function register()
+    {
+        return view('user.register');
+    }
+
      /**
      *For logging in system.
      *
@@ -180,14 +188,6 @@ class UserController extends Controller {
     public function testDatabase()
     {
         $users = factory(User::class, 1)->create();
-    }
-
-    /**
-    User registration
-    **/
-    public function register()
-    {
-        return view('user.register');
     }
 
     public function add_user(Request $request)
