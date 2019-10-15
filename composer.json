@@ -11,7 +11,7 @@
         "php": "^7.2.22",
         "fideloper/proxy": "^4.0",
         "kylekatarnls/laravel-carbon-2": "^1.0.0",
-        "laravel/framework": "5.8.*",
+        "laravel/framework": "^6.0",
         "laravel/passport": "^7.5",
         "laravel/tinker": "^1.0",
         "nesbot/carbon": "2.24.0 as 1.39.0"
