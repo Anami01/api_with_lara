@@ -1,5 +1,5 @@
 @if(Session::get('email'))
-  @php redirect('user') @endif
+@php redirect('user') @endphp
 @endif
 <!DOCTYPE html>
 <html lang="en">
@@ -11,58 +11,143 @@
   <title>Register</title>
 </head>
 <body>
-  <form action="/add_user" method="post">@csrf
-    <table>
-      <tr><td>Name</td></tr>
-      <tr>
-        <td>
-          <input type="text" name="name" class="form-control">
-          <td>
-            @if($errors->has('name')) 
-            <span>{{ $errors->first('name') }}</span>
+  <form action="/add_user" method="post" id="register_user">@csrf
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12 col-xs-12">
+          <label for='name'>Name</label>
+          <input type="text" name="name" class="form-control" required>
+        </div>
+        <div class="col-sm-12 col-xs-12">
+          <label for='email'>Email</label>
+          <input type="text" name="email" class="form-control" required>
+        </div>
+        <div class="col-sm-12 col-xs-12">
+          <label for='address'>Address</label>
+          <textarea name="address" class="form-control"></textarea required>
+        </div>
+        <div class="col-sm-12 col-xs-12">
+          <label for='country'>Country</label>
+          <select name="country" class="form-control" id="country" required>
+            <option value selected disabled>Please Choose Country</option>
+            @if($country->isnotEmpty())
+            @foreach($country as $value)
+            <option value="{{$value->id}}">{{$value->country_name}}</option>
+            @endforeach
             @endif
-          </td>
-        </td>
-      </tr>
-      <tr><td>Email</td></tr>
-      <tr>
-        <td>
-          <input type="text" name="email" class="form-control">
-          <td>
-            @if($errors->has('email')) 
-            <span>{{ $errors->first('email') }}</span>
-            @endif
-          </td>
-        </td>
-      </tr>
-      <tr><td>Password</td></tr>
-      <tr>
-        <td>
-          <input type="password" name="password" class="form-control">
-        </td>
-        <td>
-          @if($errors->has('password')) 
-          <span>{{ $errors->first('password') }}</span>
-          @endif
-        </td>
-      </tr>
-      <tr><td>Confirm Password</td></tr>
-      <tr>
-        <td>
-          <input type="password" name="confirm_password" class="form-control">
-        </td>
-        <td>
-          @if($errors->has('confirm_password')) 
-          <span>{{ $errors->first('confirm_password') }}</span>
-          @endif
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <input type='submit' value="Register" class="btn btn-primary" class="form-control">
-        </td>
-      </tr>
-    </table>
+          </select>
+        </div>
+        <div class="col-sm-12 col-xs-12">
+          <label for='state'>State</label>
+          <select class="form-control" name="state" id="state" required>
+            <option value selected disabled>Please Choose State</option>
+          </select>
+        </div>
+        <div class="col-sm-12 col-xs-12">
+          <label for='city'>City</label>
+          <select class="form-control" name="city" id="city" required>
+            <option value selected disabled>Please Choose City</option>
+          </select>
+        </div>
+        <div class="col-sm-12 col-xs-12">
+          <label for='password'>Password</label>
+          <input type="password" id="password" name="password" class="form-control" required>
+        </div>
+        <div class="col-sm-12 col-xs-12">
+          <label for='conf_password'>Confirm Password</label>
+          <input type="password" name="confirm_password" class="form-control" required>
+        </div>
+        <div class="col-sm-12 col-xs-12">
+          <br><input type='button' value="Register" class="btn btn-primary" class="form-control">
+        </div>
+      </div>
+    </div>
   </form>
 </body>
 </html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.1/dist/jquery.validate.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("#country").on("change",function(){
+      if($(this).val() != ''){
+        $.ajax({
+          type : 'get',
+          url : '/get_state_data/'+$(this).val(),
+          data : '',
+          success : function(data){
+            var state = JSON.parse(data);
+            var data = "<option value selected disabled>Please Choose State</option>";
+            $.each(state,function(index,value){
+              data += "<option value = '"+value.id+"'>"+value.state_name+"</option>";
+            });
+            $("#state").html(data);
+          }
+        });
+      }
+    });
+    $("#state").on("change",function(){
+      if($(this).val() != ''){
+        $.ajax({
+          type : 'get',
+          url : '/get_city_data/'+$(this).val()+'/'+$("#country").val(),
+          data : '',
+          success : function(data){
+            var city = JSON.parse(data);
+            var data = "<option value selected disabled>Please Choose City</option>";
+            $.each(city,function(index,value){
+              data += "<option value = '"+value.id+"'>"+value.city_name+"</option>";
+            });
+            $("#city").html(data);
+          }
+        });
+      }
+    });
+    $("#register_user").validate({
+      rules: {
+        name:"required",
+        email: {                        
+          email:true,
+          remote:'/check_email',
+        },
+        address: "required",
+        country: "required",
+        state: "required",
+        city: "required",
+        password: "required",
+        confirm_password: {
+          required: true,
+          equalTo:"#password"                    
+        }
+      },
+      messages: {
+        name: {
+          required: "Please enter name",
+        },
+        email: {
+          required : "Please enter email",
+          remote: "Please enter different email"
+        },
+        address: {
+          required: "Please enter address",
+        },
+        contry: {
+          required: "Please select country",
+        },
+        state: {
+          required: "Please select state",
+        },
+        city: {
+          required: "Please select city",
+        },
+        password: {
+          required: "Please enter password",
+        },
+        confirm_password{
+          required: "Please enter confirm password",
+          equalTo: "Please enter same password"
+        }
+      }
+    });
+  });
+</script>

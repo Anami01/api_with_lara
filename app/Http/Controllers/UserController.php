@@ -7,10 +7,7 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller { 
 
-    public function __construct()
-    {
-        $this->middleware('session')->except(['login','logout','setSession','test','register']);
-    }
+    
     /**
     Display a listing of the resource.
     @return \Illuminate\Http\Response 
@@ -39,16 +36,6 @@ class UserController extends Controller {
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'address' => 'required',
-            'number' => 'required',
-            'gender' => 'required',
-            'email' => 'required|unique:users,email',
-            'city' => 'required',
-            'photo' => 'required',
-            'password' => 'required',
-        ]);
         $file = $request->file('photo');
         $destinationPath = 'uploads';
         $file->move($destinationPath,$file->getClientOriginalName());
@@ -98,16 +85,6 @@ class UserController extends Controller {
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required',
-            'address' => 'required',
-            'number' => 'required',
-            'gender' => 'required',
-            'email' => 'required',
-            'city' => 'required',
-            'photo' => 'required',
-            'password' => 'required',
-        ]);
         $file = $request->file('photo');
         $destinationPath = 'uploads';
         $file->move($destinationPath,$file->getClientOriginalName());
@@ -142,7 +119,8 @@ class UserController extends Controller {
     **/
     public function register()
     {
-        return view('user.register');
+        $data['country'] = DB::table('country')->get();
+        return view('user.register',$data);
     }
 
      /**
@@ -173,6 +151,7 @@ class UserController extends Controller {
             return redirect('login');
         }
     } 
+
     /**
     *For Logging Out
     **/
@@ -180,6 +159,75 @@ class UserController extends Controller {
     {
         $request->session()->forget('email');
         return redirect('login');
+    }
+
+    public function check_email(Request $request)
+    {
+        $data = DB::table('users')->where('email',$request->email)->get();
+        if($data->isEmpty()){
+            echo false;
+        }else{
+            echo true;
+        }
+    }
+
+    public function get_state_data($id)
+    {
+        echo DB::table('state')->where('country_id',$id)->get();
+    }
+
+
+    public function get_city_data($state,$country)
+    {
+        echo DB::table('city')->where('state_id',$state)->where('country_id',$country)->get();
+    }
+
+    /**
+    *For Logging Out
+    **/
+    public function add_city()
+    {
+        $data['country'] = DB::table('country')->get();
+        $data['state'] = DB::table('state')->get();
+        return view('user/add_city_state_country',$data);
+    }
+
+    /**
+    *For Logging Out
+    **/
+    public function add_city_data(Request $request)
+    {
+        if(!empty($request->country)){
+            $array = array_filter($request->country);
+            if(count($array) == 1){
+                $data = DB::table('country')->insert(array('country_name'=>$array[0]));
+            }else if(count($array) > 1){
+                foreach($array as $value){
+                    $data = DB::table('country')->insert(array('country_name'=>$value));
+                }
+            }
+        }
+        if(!empty($request->state)> 0){
+            $array = array_filter($request->state);
+            if(count($array) == 1){
+                $data = DB::table('state')->insert(array('state_name'=>$array[0],'country_id' => $request->country_id_list));
+            }else if(count($array) > 1){
+                foreach($array as $value){
+                    $data = DB::table('state')->insert(array('state_name'=>$value,'country_id' => $request->country_id_list));
+                }
+            }
+        }
+        if(!empty($request->city)> 0){
+            $array = array_filter($request->city);
+            if(count($array) == 1){
+                $data = DB::table('city')->insert(array('city_name'=>$array[0],'country_id' => $request->country_id_list,'state_id' => $request->state_id_list));
+            }else if(count($array) > 1){
+                foreach($array as $value){
+                    $data = DB::table('city')->insert(array('city_name'=>$value,'country_id' => $request->country_id_list,'state_id' => $request->state_id_list));
+                }
+            }
+        }
+        return redirect('/');
     }
 
     /**
@@ -192,12 +240,6 @@ class UserController extends Controller {
 
     public function add_user(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-            'password' => 'required',
-            'confirm_password' => 'required|same:password',
-        ]);
         $array = array(
             'email' => $request->email,
             'name' => $request->name,
@@ -224,11 +266,6 @@ class UserController extends Controller {
     **/
     public function change_pass(Request $request)
     {
-        $request->validate([
-            'old_pass' => 'required',
-            'new_pass' => 'required',
-            'confirm_pass' => 'required|same:new_pass',
-        ]);
         $check = DB::table('users')->where('email',$request->session()->get('email'))->where('password',$request->old_pass)->get();
         if(is_null($check)){
             $request->session()->flash('pass_change',"Please Enter Correct Password");
@@ -239,8 +276,8 @@ class UserController extends Controller {
                 return redirect('user');
             }else{
               $request->session()->flash('pass_change',"Please Enter Different Password");
-            return redirect('change_password');  
-            }
-        }
-    }
+              return redirect('change_password');  
+          }
+      }
+  }
 }
