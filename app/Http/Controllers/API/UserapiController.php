@@ -199,7 +199,7 @@ class UserapiController extends Controller
                 return response()->json(['error' => 'Unauthorised'], 401);
             }
         }else{
-            return response()->json(['error' => 'Error'], 500);
+            return response()->json(['error' => 'Something went wrong'], 500);
         }
         
     } 
@@ -209,20 +209,36 @@ class UserapiController extends Controller
         $rawPostData = json_decode(file_get_contents("php://input"));
         $user = User::create([
             'name' => $rawPostData->name,
+            'address' => $rawPostData->address,
             'email' => $rawPostData->email,
-            'password' => bcrypt($rawPostData->password),
+            'password' => $rawPostData->password,
         ]);
-        $token = $user->createToken('TutsForWeb')->accessToken;
+        $token = $user->createToken('register')->accessToken;
         return response()->json(['token' => $token], 200);
     }
 
     public function test()
     {
-        $rawPostData = json_decode(file_get_contents("php://input"));
-        $response = array(
-            'success' => true,
-            'msg' => $rawPostData
-        );
-        return response()->json($response);
+        // $rawPostData = json_decode(file_get_contents("php://input"));
+        // $response = array(
+        //     'success' => true,
+        //     'msg' => $rawPostData
+        // );
+        // return response()->json($response);
+
+        $data = User::all();
+        if($data->isnotEmpty()){
+            $response = array(
+                'success' => true,
+                'data' => $data,
+                'msg' => 'Data found.'
+            );
+        }else{
+            $response = array(
+                'success' => false,
+                'msg' => 'No data found.'
+            );
+        }
+        return response()->json($response); 
     }
 }
