@@ -11,7 +11,8 @@
   <title>Register</title>
 </head>
 <body>
-  <form action="/add_user" method="post" id="register_user">@csrf
+  <form action="add_user" method="post" id="register_user">
+  @csrf
     <div class="container">
       <div class="row">
         <div class="col-sm-12 col-xs-12">
@@ -24,11 +25,11 @@
         </div>
         <div class="col-sm-12 col-xs-12">
           <label for='address'>Address</label>
-          <textarea name="address" class="form-control"></textarea required>
+          <textarea name="address" class="form-control" required></textarea>
         </div>
         <div class="col-sm-12 col-xs-12">
           <label for='country'>Country</label>
-          <select name="country" class="form-control" id="country" required>
+          <select name="country" class="form-control" id="country">
             <option value selected disabled>Please Choose Country</option>
             @if($country->isnotEmpty())
             @foreach($country as $value)
@@ -39,13 +40,13 @@
         </div>
         <div class="col-sm-12 col-xs-12">
           <label for='state'>State</label>
-          <select class="form-control" name="state" id="state" required>
+          <select class="form-control" name="state" id="state">
             <option value selected disabled>Please Choose State</option>
           </select>
         </div>
         <div class="col-sm-12 col-xs-12">
           <label for='city'>City</label>
-          <select class="form-control" name="city" id="city" required>
+          <select class="form-control" name="city" id="city">
             <option value selected disabled>Please Choose City</option>
           </select>
         </div>
@@ -58,7 +59,8 @@
           <input type="password" name="confirm_password" class="form-control" required>
         </div>
         <div class="col-sm-12 col-xs-12">
-          <br><input type='button' value="Register" class="btn btn-primary" class="form-control">
+        <br><button type="button" class="btn btn-primary submit_data">Submit</button>
+          <!-- <br><input type='submit' value="Register" class="btn btn-primary" class="form-control"> -->
         </div>
       </div>
     </div>
@@ -108,12 +110,12 @@
         name:"required",
         email: {                        
           email:true,
-          remote:'/check_email',
+          remote:'check_email',
         },
         address: "required",
-        country: "required",
-        state: "required",
-        city: "required",
+        // country: "required",
+        // state: "required",
+        // city: "required",
         password: "required",
         confirm_password: {
           required: true,
@@ -131,23 +133,35 @@
         address: {
           required: "Please enter address",
         },
-        contry: {
-          required: "Please select country",
-        },
-        state: {
-          required: "Please select state",
-        },
-        city: {
-          required: "Please select city",
-        },
+        // contry: {
+        //   required: "Please select country",
+        // },
+        // state: {
+        //   required: "Please select state",
+        // },
+        // city: {
+        //   required: "Please select city",
+        // },
         password: {
           required: "Please enter password",
         },
-        confirm_password{
+        confirm_password :{
           required: "Please enter confirm password",
           equalTo: "Please enter same password"
         }
       }
+      
     });
+
+    $(".submit_data").click(function () {
+      // $("#register_users").validate();
+
+      console.log($("#register_user").valid())
+      if($("#register_user").valid()){
+        console.log("asd")
+        $("#register_user").submit();
+        $("#register_user").trigger('submit');
+      }
+    })
   });
 </script>

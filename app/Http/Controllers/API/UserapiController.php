@@ -218,9 +218,10 @@ class UserapiController extends Controller
 
     public function test()
     {
+        $rawPostData = json_decode(file_get_contents("php://input"));
         $response = array(
             'success' => true,
-            'msg' => 'No data.'
+            'msg' => $rawPostData
         );
         return response()->json($response);
     }
