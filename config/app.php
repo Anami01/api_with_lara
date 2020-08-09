@@ -52,7 +52,7 @@
     |
     */
 
-    'url' => env('APP_URL', 'https://'.$_SERVER['HTTP_HOST'].'/'),
+    'url' => env('APP_URL', 'https://user-mgmt-app.herokuapp.com/'),
 
     'asset_url' => env('ASSET_URL', null),
 
