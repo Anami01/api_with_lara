@@ -15,7 +15,9 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'pgsql'),
+    'default' => env('DB_CONNECTION', 'mysql'),
+
+    "client_encoding" => "utf8mb4",
 
     /*
     |--------------------------------------------------------------------------
