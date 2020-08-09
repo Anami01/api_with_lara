@@ -71,7 +71,7 @@ return [
             'database' => 'dep26qut8apd50',
             'username' => 'faffruacfsgaty',
             'password' => '15cbd20763e293c280c42158734bb2ab0c625973cfbbef05d074bca520c60783',
-            'charset' => 'utf8mb4',
+            'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
             'schema' => 'public',
