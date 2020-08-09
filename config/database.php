@@ -65,12 +65,12 @@ return [
 
         'pgsql' => [
             'driver' => 'pgsql',
-            'url' => env('DATABASE_URL','postgres://faffruacfsgaty:15cbd20763e293c280c42158734bb2ab0c625973cfbbef05d074bca520c60783@ec2-54-197-254-117.compute-1.amazonaws.com:5432/dep26qut8apd50?charset=UTF-8'),
-            'host' => env('DB_HOST', 'ec2-54-197-254-117.compute-1.amazonaws.com'),
-            'port' => env('DB_PORT', '5432'),
-            'database' => env('DB_DATABASE', 'dep26qut8apd50'),
-            'username' => env('DB_USERNAME', 'faffruacfsgaty'),
-            'password' => env('DB_PASSWORD', '15cbd20763e293c280c42158734bb2ab0c625973cfbbef05d074bca520c60783'),
+            'url' => 'postgres://faffruacfsgaty:15cbd20763e293c280c42158734bb2ab0c625973cfbbef05d074bca520c60783@ec2-54-197-254-117.compute-1.amazonaws.com:5432/dep26qut8apd50?charset=UTF-8',
+            'host' => 'ec2-54-197-254-117.compute-1.amazonaws.com',
+            'port' => '5432',
+            'database' => 'dep26qut8apd50',
+            'username' => 'faffruacfsgaty',
+            'password' => '15cbd20763e293c280c42158734bb2ab0c625973cfbbef05d074bca520c60783',
             'charset' => 'utf8mb4',
             'prefix' => '',
             'prefix_indexes' => true,
