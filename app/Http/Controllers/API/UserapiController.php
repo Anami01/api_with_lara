@@ -211,7 +211,7 @@ class UserapiController extends Controller
             'name' => $rawPostData->name,
             'address' => $rawPostData->address,
             'email' => $rawPostData->email,
-            'password' => $rawPostData->password,
+            'password' => bcrypt($rawPostData->password),
         ]);
         $token = $user->createToken('register')->accessToken;
         return response()->json(['token' => $token], 200);
