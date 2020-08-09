@@ -71,7 +71,7 @@ return [
             'database' => env('DB_DATABASE', 'dep26qut8apd50'),
             'username' => env('DB_USERNAME', 'faffruacfsgaty'),
             'password' => env('DB_PASSWORD', '15cbd20763e293c280c42158734bb2ab0c625973cfbbef05d074bca520c60783'),
-            'charset' => 'utf8',
+            'charset' => 'utf8mb4',
             'prefix' => '',
             'prefix_indexes' => true,
             'schema' => 'public',
