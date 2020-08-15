@@ -113,9 +113,6 @@
           remote:'check_email',
         },
         address: "required",
-        // country: "required",
-        // state: "required",
-        // city: "required",
         password: "required",
         confirm_password: {
           required: true,
@@ -132,16 +129,7 @@
         },
         address: {
           required: "Please enter address",
-        },
-        // contry: {
-        //   required: "Please select country",
-        // },
-        // state: {
-        //   required: "Please select state",
-        // },
-        // city: {
-        //   required: "Please select city",
-        // },
+        }
         password: {
           required: "Please enter password",
         },

@@ -13,9 +13,10 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->group(function () {
+Route::group(['middleware' => ['auth:api']],function () {
 	Route::resource('userapi','API\UserapiController');
+	Route::post('test','API\UserapiController@test');
+	Route::post('logout', 'API\UserapiController@logout');
 });
 Route::post('login','API\UserapiController@login');
 Route::post('register','API\UserapiController@register');
-Route::post('test','API\UserapiController@test');

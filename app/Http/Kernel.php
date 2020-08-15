@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Illuminate\Session\Middleware\StartSession;
 
 class Kernel extends HttpKernel
 {
@@ -39,6 +40,9 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
+            \App\Http\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            \Illuminate\Session\Middleware\StartSession::class,
             'throttle:60,1',
             'bindings',
         ],

@@ -1,12 +1,15 @@
 <?php
 
 namespace App\Http\Controllers\API;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
 use DB;
 use Validator;
+use Lcobucci\JWT\Parser;
+
 
 class UserapiController extends Controller
 {
@@ -18,19 +21,19 @@ class UserapiController extends Controller
     public function index()
     {
         $data = User::all();
-        if($data->isnotEmpty()){
+        if ($data->isnotEmpty()) {
             $response = array(
                 'success' => true,
                 'data' => $data,
                 'msg' => 'Data found.'
             );
-        }else{
+        } else {
             $response = array(
                 'success' => false,
                 'msg' => 'No data found.'
             );
         }
-        return response()->json($response); 
+        return response()->json($response);
     }
 
     /**
@@ -52,7 +55,7 @@ class UserapiController extends Controller
     public function store(Request $request)
     {
         $rawPostData = json_decode(file_get_contents("php://input"));
-        if($rawPostData->name){
+        if ($rawPostData->name) {
             $array = array(
                 'name' => $rawPostData->name,
                 'email' => $rawPostData->email,
@@ -60,24 +63,24 @@ class UserapiController extends Controller
                 'api_token' => str_random(60)
             );
             $data = DB::table('users')->insert($array);
-            if($data == true){
+            if ($data == true) {
                 $response = array(
                     'success' => true,
                     'msg' => 'Successfully registered'
                 );
-            }else{
+            } else {
                 $response = array(
                     'success' => false,
                     'msg' => 'Something went wrong'
                 );
             }
-        }else{
+        } else {
             $response = array(
                 'success' => false,
                 'msg' => 'No data entered.'
             );
         }
-        return response()->json($response); 
+        return response()->json($response);
     }
 
     /**
@@ -89,20 +92,20 @@ class UserapiController extends Controller
     public function show($id)
     {
         $data = User::find($id);
-        if(is_null($data)){
+        if (is_null($data)) {
             $response = array(
                 'success' => false,
                 'msg' => 'No data found.'
             );
-        }else{
-            $userData = User::where('id',$id)->firstorFail();
+        } else {
+            $userData = User::where('id', $id)->firstorFail();
             $response = array(
                 'success' => true,
                 'data' => $userData,
                 'msg' => 'Data found.'
             );
         }
-        return response()->json($response); 
+        return response()->json($response);
     }
 
     /**
@@ -126,31 +129,31 @@ class UserapiController extends Controller
     public function update($id)
     {
         $rawPostData = json_decode(file_get_contents("php://input"));
-        if($rawPostData->name){
+        if ($rawPostData->name) {
             $array = array(
                 'name' => $rawPostData->name,
                 'email' => $rawPostData->email,
                 'password' => $rawPostData->password,
             );
-            $data = DB::table('users')->where('id',$id)->update($array);
-            if($data == '1'){
+            $data = DB::table('users')->where('id', $id)->update($array);
+            if ($data == '1') {
                 $response = array(
                     'success' => true,
                     'msg' => 'Successfully updated'
                 );
-            }else{
+            } else {
                 $response = array(
                     'success' => false,
                     'msg' => 'Something went wrong'
                 );
             }
-        }else{
+        } else {
             $response = array(
                 'success' => false,
                 'msg' => 'No data entered.'
             );
         }
-        return response()->json($response); 
+        return response()->json($response);
     }
 
     /**
@@ -161,33 +164,33 @@ class UserapiController extends Controller
      */
     public function destroy($id)
     {
-        if(!empty($id)){
+        if (!empty($id)) {
             $data = User::find($id);
-            if(is_null($data)){
+            if (is_null($data)) {
                 $response = array(
                     'success' => false,
                     'msg' => 'User does not exists.'
-                ); 
-            }else{
+                );
+            } else {
                 $delete = User::destroy($id);
                 $response = array(
                     'success' => true,
                     'msg' => 'Successfully deleted.'
                 );
             }
-        }else{
+        } else {
             $response = array(
                 'success' => false,
                 'msg' => 'No data.'
             );
         }
-        return response()->json($response); 
+        return response()->json($response);
     }
 
     public function login()
     {
         $rawPostData = json_decode(file_get_contents("php://input"));
-        if($rawPostData->email && $rawPostData->password){
+        if ($rawPostData->email && $rawPostData->password) {
             $credentials = [
                 'email' => $rawPostData->email,
                 'password' => $rawPostData->password,
@@ -198,11 +201,10 @@ class UserapiController extends Controller
             } else {
                 return response()->json(['error' => 'Unauthorised'], 401);
             }
-        }else{
+        } else {
             return response()->json(['error' => 'Something went wrong'], 500);
         }
-        
-    } 
+    }
 
     public function register()
     {
@@ -227,18 +229,28 @@ class UserapiController extends Controller
         // return response()->json($response);
 
         $data = User::all();
-        if($data->isnotEmpty()){
+        if ($data->isnotEmpty()) {
             $response = array(
                 'success' => true,
                 'data' => $data,
                 'msg' => 'Data found.'
             );
-        }else{
+        } else {
             $response = array(
                 'success' => false,
                 'msg' => 'No data found.'
             );
         }
-        return response()->json($response); 
+        return response()->json($response);
+    }
+
+    public function logout(Request $request)
+    {
+        if (Auth::check()) {
+            Auth::user()->AauthAcessToken()->delete();
+            return response()->json([
+                'message' => 'Successfully logged out'
+            ]);
+        }
     }
 }
