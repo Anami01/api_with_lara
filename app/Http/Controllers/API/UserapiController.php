@@ -128,12 +128,22 @@ class UserapiController extends Controller
      */
     public function update($id)
     {
+
         $rawPostData = json_decode(file_get_contents("php://input"));
+        // $file = $request->file('photo');
+        // $destinationPath = 'uploads';
+        // $file->move($destinationPath, $file->getClientOriginalName());
         if ($rawPostData->name) {
+            $check = DB::table('users')->where('id', $id)->first();
             $array = array(
-                'name' => $rawPostData->name,
-                'email' => $rawPostData->email,
-                'password' => $rawPostData->password,
+                'name' => (!empty($rawPostData->name) ? $rawPostData->name : $check->name),
+                'address' => (!empty($rawPostData->address) ? $rawPostData->address : $check->address),
+                'number' => (!empty($rawPostData->number) ? $rawPostData->number : $check->number),
+                'gender' => (!empty($rawPostData->gender) ? $rawPostData->gender : $check->gender),
+                'email' => (!empty($rawPostData->email) ? $rawPostData->email : $check->email),
+                'city' => (!empty($rawPostData->city) ? $rawPostData->city : $check->city),
+                // 'photo' => (!empty($rawPostData->file('photo')) ? $file->getClientOriginalName() : $check->photo),
+                'password' => (!empty($rawPostData->password) ? bcrypt($rawPostData->password) : $check->password),
             );
             $data = DB::table('users')->where('id', $id)->update($array);
             if ($data == '1') {
